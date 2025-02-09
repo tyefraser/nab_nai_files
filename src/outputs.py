@@ -1,9 +1,27 @@
 import os
 import pandas as pd
 import json
+from typing import Dict, List, Any
 from logger import logger
 
-def save_text_file(output_folder: str, file_name: str, content: str, file_type: str):
+
+def ensure_directory_exists(directory_path: str) -> None:
+    """
+    Ensures that a directory exists; creates it if necessary.
+
+    Parameters:
+    - directory_path (str): The path of the directory to check/create.
+
+    Returns:
+    - None
+    """
+    try:
+        os.makedirs(directory_path, exist_ok=True)
+    except Exception as e:
+        logger.error(f"❌ Failed to create directory {directory_path}: {e}")
+
+
+def save_text_file(output_folder: str, file_name: str, content: str, file_type: str) -> None:
     """
     Saves text content to a file.
 
@@ -17,11 +35,15 @@ def save_text_file(output_folder: str, file_name: str, content: str, file_type: 
     - None
     """
     file_path = os.path.join(output_folder, f"{file_name}_{file_type}.txt")
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(content)
-    logger.info(f"✅ {file_type.capitalize()} text output saved: {file_path}")
+    try:
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        logger.info(f"✅ Success: {file_type.capitalize()} text output saved → {file_path}")
+    except Exception as e:
+        logger.error(f"❌ Error saving {file_type} text file: {e}")
 
-def save_dict_to_json(output_folder: str, file_name: str, data: dict):
+
+def save_dict_to_json(output_folder: str, file_name: str, data: Dict[str, Any]) -> None:
     """
     Saves a dictionary to a JSON file.
 
@@ -34,24 +56,27 @@ def save_dict_to_json(output_folder: str, file_name: str, data: dict):
     - None
     """
     file_path = os.path.join(output_folder, f"{file_name}.json")
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
-    logger.info(f"✅ Dictionary output saved: {file_path}")
+    try:
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4)
+        logger.info(f"✅ Success: Dictionary output saved → {file_path}")
+    except Exception as e:
+        logger.error(f"❌ Error saving JSON file {file_name}: {e}")
 
 
 def nai_output_generator(
-        file_output_folder_path: str,
-        raw_content: str,
-        cleaned_content: str,
-        nai_dict: dict,
-        df_file_metadata: pd.DataFrame,
-        df_groups: pd.DataFrame,
-        df_accounts: pd.DataFrame,
-        df_transactions: pd.DataFrame,
-        df_accounts_structured: str,
-        df_transactions_structured: str,
-        outputs: list
-):
+    file_output_folder_path: str,
+    raw_content: str,
+    cleaned_content: str,
+    nai_dict: Dict[str, Any],
+    df_file_metadata: pd.DataFrame,
+    df_groups: pd.DataFrame,
+    df_accounts: pd.DataFrame,
+    df_transactions: pd.DataFrame,
+    df_accounts_structured: pd.DataFrame,
+    df_transactions_structured: pd.DataFrame,
+    outputs: List[str]
+) -> None:
     """
     Generates various output files based on the specified list of outputs.
 
@@ -64,16 +89,16 @@ def nai_output_generator(
     - df_groups (pd.DataFrame): DataFrame containing group-level data.
     - df_accounts (pd.DataFrame): DataFrame containing account-level data.
     - df_transactions (pd.DataFrame): DataFrame containing transaction data.
-    - df_accounts_structured: str,
-    - df_transactions_structured: str,
-    - outputs (list): List of outputs to generate (e.g., ["raw_content", "df_accounts"]).
+    - df_accounts_structured (pd.DataFrame): Structured account-level DataFrame.
+    - df_transactions_structured (pd.DataFrame): Structured transaction-level DataFrame.
+    - outputs (List[str]): List of outputs to generate (e.g., ["raw_content", "df_accounts"]).
 
     Returns:
     - None
     """
 
     # ✅ Ensure output directory exists
-    os.makedirs(file_output_folder_path, exist_ok=True)
+    ensure_directory_exists(file_output_folder_path)
 
     # ✅ Define mapping of output types to their processing functions
     output_actions = {
@@ -88,51 +113,47 @@ def nai_output_generator(
         "df_transactions_structured": lambda: df_transactions_structured.to_csv(os.path.join(file_output_folder_path, "df_transactions_structured.csv"), index=False),
     }
 
-    # ✅ Process static outputs first (DataFrames & dictionary)
+    # ✅ Process requested outputs
     for output_type in outputs:
         if output_type in output_actions:
             try:
                 output_actions[output_type]()  # Execute the corresponding function
-                logger.info(f"✅ {output_type} output generated successfully.")
+                logger.info(f"✅ Success: {output_type} output generated.")
             except Exception as e:
                 logger.error(f"❌ Error generating {output_type} output: {e}")
 
-    return None  # ✅ Ensures proper function closure
-
 
 def output_generator(
-        output_folder_path: str,
-        files_dict: dict,
-        df_nai_checks: pd.DataFrame,
-        outputs: list
-):
+    output_folder_path: str,
+    files_dict: Dict[str, Any],
+    df_nai_checks: pd.DataFrame,
+    outputs: List[str]
+) -> None:
     """
     Generates various output files based on the specified list of outputs.
 
     Parameters:
     - output_folder_path (str): The folder where outputs will be saved.
     - files_dict (dict): Dictionary containing file data.
-    - outputs (list): List of outputs to generate (e.g., ["checks", "raw_content", "df_accounts"]).
+    - df_nai_checks (pd.DataFrame): DataFrame containing validation check results.
+    - outputs (List[str]): List of outputs to generate (e.g., ["checks", "raw_content", "df_accounts"]).
 
     Returns:
     - None
     """
 
-    # Ensure the output directory exists
-    os.makedirs(output_folder_path, exist_ok=True)
+    # ✅ Ensure output directory exists
+    ensure_directory_exists(output_folder_path)
 
-    # ✅ Define mapping of output types to their processing functions
     if "checks" in outputs:
         df_nai_checks.to_csv(os.path.join(output_folder_path, "checks.csv"), index=False)
+        logger.info(f"✅ Success: Checks output saved → {output_folder_path}/checks.csv")
 
-    # product nai file outputs
-    print(files_dict.keys())
+    # ✅ Process individual NAI file outputs
     for file_name, file_dict in files_dict.items():
-
-        # Specific file path
-        file_name_without_ext, _ = os.path.splitext(file_name)  # Splits "example.nai" → ("example", ".nai")
+        file_name_without_ext, _ = os.path.splitext(file_name)
         file_output_folder_path = os.path.join(output_folder_path, file_name_without_ext)
-        os.makedirs(file_output_folder_path, exist_ok=True)
+        ensure_directory_exists(file_output_folder_path)
 
         nai_output_generator(
             file_output_folder_path=file_output_folder_path,

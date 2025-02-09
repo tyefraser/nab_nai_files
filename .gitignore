@@ -173,4 +173,5 @@ cython_debug/
 *.csv
 *.xlsx
 !documentation/*.xlsx
+logs/
 folder_output/
