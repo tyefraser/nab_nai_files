@@ -1,7 +1,8 @@
 import os
 from utils import get_config
 from parser import nai_parser
-from logger import logger  # Import the logger
+from checks import nai_dict_checks
+from logger import logger
 
 def process_nai_files():
     """
@@ -15,10 +16,29 @@ def process_nai_files():
         logger.info(f"Configuration loaded: {CONFIG_DICT}")
         logger.info(f"Configuration loaded: {CONFIG_DICT.keys()}")
 
-        nai_parser(
-            input_folder = CONFIG_DICT['input_folder'],
-            output_folder = CONFIG_DICT['output_folder']
-        )
+        # Parse NAI file
+        parser_params = {key: CONFIG_DICT[key] for key in ["input_folder_path", "transaction_detail_codes"]}
+        nai_dict = nai_parser(**parser_params)
+
+        # Run checks on all of the data produced
+        df_nai_checks = nai_dict_checks(nai_dict)
+
+        # Write Output
+        nai_dict
+        df_nai_checks
+
+        # Save the outputs as required
+        # save_nai_outputs(nai_dict)
+        
+        with open("raw_content.txt", "w", encoding="utf-8") as f:
+            f.write(file_data["raw_content"])
+        
+        with open("cleaned_content.txt", "w", encoding="utf-8") as f:
+            f.write(file_data["cleaned_content"])
+
+
+
+
 
         # INPUT_FOLDER = CONFIG_DICT["PROJECT_ROOT"] / "data"  # Example input folder
         # logger.info(f"Looking for NAI files in: {INPUT_FOLDER}")

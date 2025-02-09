@@ -1,0 +1,31 @@
+,File Name,Group Name,Account Name,Check Name,Control Value,Control Value - Source,Calculated Value,Calculated Value - Source,Difference,Status
+0,20250101.nai,NA,NA,CHECK 1: file_control_total_a,2116951.58,df_file_metadata.file_control_total_a,2116951.58,df_groups.sum(group_control_total_a),0.0,PASS
+1,20250101.nai,NA,NA,CHECK 2: number_of_groups,1.0,df_file_metadata.number_of_groups,1.0,len(df_groups),0.0,PASS
+2,20250101.nai,NA,NA,CHECK 3: number_of_records,188.0,Number of records,0.0,TBD,-188.0,FAIL
+3,20250101.nai,NA,NA,CHECK 4: file_control_total_b,2116916.57,Metadata - file control total b,2116916.57,"Group df, sum of control total b",0.0,PASS
+4,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,NA,CHECK 5: group_control_total_a,2116951.58,"Group df, control total a",0.0,TBD,-2116951.58,FAIL
+5,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,NA,CHECK 6: group_control_total_b,2116916.57,"Group df, control total b",0.0,TBD,-2116916.57,FAIL
+6,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,594481027,CHECK 7: total credits,0.0,"Account df, total credits column",42034.98,"Transactions, sum of credit amounts",42034.98,FAIL
+7,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,594481027,CHECK 8: Count of credit transactions,0.0,"Accounts df, number of credit transaction column",42034.98,"Transactions, sum of credit amounts",42034.98,FAIL
+8,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,594481027,CHECK 9: total debits,0.0,"Account df, total debit column",41712.55,"Transactions, sum of debit amounts",41712.55,FAIL
+9,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,594481027,CHECK 10: Count of debit transactions,0.0,"Accounts df, number of debit transaction column",41712.55,"Transactions, sum of debit amounts",41712.55,FAIL
+10,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,594481027,CHECK 11: account_control_total_a,-134.67,Accounts df - account_control_total_a column,-134.67,Filtered Accounts df check numerical values,0.0,PASS
+11,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,594481027,CHECK 12: account_control_total_b,-134.67,Accounts df - account_control_total_b column,-134.67,Filtered Accounts df check numerical values,0.0,PASS
+12,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,823840968,CHECK 7: total credits,0.0,"Account df, total credits column",42034.98,"Transactions, sum of credit amounts",42034.98,FAIL
+13,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,823840968,CHECK 8: Count of credit transactions,0.0,"Accounts df, number of credit transaction column",42034.98,"Transactions, sum of credit amounts",42034.98,FAIL
+14,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,823840968,CHECK 9: total debits,0.0,"Account df, total debit column",41712.55,"Transactions, sum of debit amounts",41712.55,FAIL
+15,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,823840968,CHECK 10: Count of debit transactions,0.0,"Accounts df, number of debit transaction column",41712.55,"Transactions, sum of debit amounts",41712.55,FAIL
+16,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,823840968,CHECK 11: account_control_total_a,19.89,Accounts df - account_control_total_a column,19.89,Filtered Accounts df check numerical values,0.0,PASS
+17,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,823840968,CHECK 12: account_control_total_b,19.89,Accounts df - account_control_total_b column,19.89,Filtered Accounts df check numerical values,0.0,PASS
+18,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,553686978,CHECK 7: total credits,645.98,"Account df, total credits column",42034.98,"Transactions, sum of credit amounts",41389.0,FAIL
+19,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,553686978,CHECK 8: Count of credit transactions,1.0,"Accounts df, number of credit transaction column",42034.98,"Transactions, sum of credit amounts",42033.98,FAIL
+20,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,553686978,CHECK 9: total debits,41712.55,"Account df, total debit column",41712.55,"Transactions, sum of debit amounts",0.0,PASS
+21,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,553686978,CHECK 10: Count of debit transactions,8.0,"Accounts df, number of debit transaction column",41712.55,"Transactions, sum of debit amounts",41704.55,FAIL
+22,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,553686978,CHECK 11: account_control_total_a,107830.11,Accounts df - account_control_total_a column,107830.11,Filtered Accounts df check numerical values,0.0,PASS
+23,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,553686978,CHECK 12: account_control_total_b,107830.11,Accounts df - account_control_total_b column,107830.11,Filtered Accounts df check numerical values,0.0,PASS
+24,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,857862896,CHECK 7: total credits,0.0,"Account df, total credits column",42034.98,"Transactions, sum of credit amounts",42034.98,FAIL
+25,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,857862896,CHECK 8: Count of credit transactions,0.0,"Accounts df, number of credit transaction column",42034.98,"Transactions, sum of credit amounts",42034.98,FAIL
+26,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,857862896,CHECK 9: total debits,0.0,"Account df, total debit column",41712.55,"Transactions, sum of debit amounts",41712.55,FAIL
+27,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,857862896,CHECK 10: Count of debit transactions,0.0,"Accounts df, number of debit transaction column",41712.55,"Transactions, sum of debit amounts",41712.55,FAIL
+28,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,857862896,CHECK 11: account_control_total_a,28.05,Accounts df - account_control_total_a column,28.05,Filtered Accounts df check numerical values,0.0,PASS
+29,20250101.nai,BNZA_NATAAU3M_1_20120724_0000,857862896,CHECK 12: account_control_total_b,28.05,Accounts df - account_control_total_b column,28.05,Filtered Accounts df check numerical values,0.0,PASS
