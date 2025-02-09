@@ -4,7 +4,6 @@ import pandas as pd
 from logger import logger
 from datetime import datetime
 
-
 def clean_nai_file(file_path):
     """
     Reads and cleans a .nai file by performing the following operations:
@@ -47,7 +46,7 @@ def clean_nai_file(file_path):
         if previous_line:
             cleaned_lines.append(previous_line)
 
-        raw_content = "\n".join(raw_lines)
+        raw_content = "".join(raw_lines)
         cleaned_content = "\n".join(cleaned_lines)
 
         return raw_content, cleaned_content
@@ -306,6 +305,68 @@ def nai_dict_to_dfs(nai_dict):
 
     return df_file_metadata, df_groups, df_accounts, df_transactions
 
+def structured_dfs(df_file_metadata, df_groups, df_accounts, df_transactions):
+    """
+    Merges metadata and group data into the accounts DataFrame.
+
+    Parameters:
+    - df_file_metadata (pd.DataFrame): File metadata DataFrame.
+    - df_groups (pd.DataFrame): Group-level data.
+    - df_accounts (pd.DataFrame): Account-level data.
+    - df_transactions (pd.DataFrame): Transaction-level data.
+
+    Returns:
+    - pd.DataFrame: Structured accounts DataFrame with merged metadata and group data.
+    """
+
+    # ✅ Copy df_accounts to avoid modifying the original
+    df_accounts_structured = df_accounts.copy()
+
+    # ✅ Safely extract file metadata (assuming it's a single-row DataFrame)
+    if len(df_file_metadata) == 1:
+        df_file_metadata = df_file_metadata.iloc[0]  # Convert to Series for direct column assignment
+
+        df_accounts_structured["file_control_total_a"] = df_file_metadata["file_control_total_a"]
+        df_accounts_structured["number_of_groups"] = df_file_metadata["number_of_groups"]
+        df_accounts_structured["number_of_records"] = df_file_metadata["number_of_records"]
+        df_accounts_structured["file_control_total_b"] = df_file_metadata["file_control_total_b"]
+    else:
+        raise ValueError("df_file_metadata must contain exactly one row.")
+
+    # ✅ Merge group data onto accounts using "group_id"
+    df_accounts_structured = df_accounts_structured.merge(
+        df_groups[["group_id", "group_control_total_a", "group_control_total_b"]],
+        on="group_id",
+        how="left"
+    )
+
+    # ✅ Ensure column order is correct
+    accounts_structured_column_order = [
+        "file_metadata_id",
+        "file_control_total_a",
+        "number_of_groups",
+        "number_of_records",
+        "file_control_total_b",
+        "group_id",
+        "group_control_total_a",
+        "group_control_total_b",
+        "commercial_account_number",
+        "currency_code",
+        "closing_balance",
+        "total_credits",
+        "number_of_credit_transactions",
+        "total_debits",
+        "number_of_debit_transactions",
+        "account_control_total_a",
+        "account_control_total_b",
+    ]
+
+    # df_transactions
+    df_transactions_structured = df_transactions.copy()
+
+    # ✅ Return structured DataFrame with correct column order
+    return df_accounts_structured[accounts_structured_column_order], df_transactions_structured
+
 def process_nai_file(input_folder_path: str, file_name: str, transaction_detail_codes: dict):
     """
     Processes a .nai file by cleaning it and structuring the data.
@@ -322,9 +383,6 @@ def process_nai_file(input_folder_path: str, file_name: str, transaction_detail_
     # Read and clean file
     raw_content, cleaned_content = clean_nai_file(file_path)
 
-    for line in cleaned_content.split("\n"): # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE
-        print(line) # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE
-
     # Process cleaned data
     nai_dict = nai_lines_to_dict(
         cleaned_content.split("\n"),
@@ -332,11 +390,16 @@ def process_nai_file(input_folder_path: str, file_name: str, transaction_detail_
     )
 
     # Print structured data
-    print(json.dumps(nai_dict, indent=4))  # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE
-    print(f"Keys: {nai_dict.keys()}")  # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE # TO DELETE
 
     # Convert dictionary to DataFrames
     df_file_metadata, df_groups, df_accounts, df_transactions = nai_dict_to_dfs(nai_dict)
+
+    df_accounts_structured, df_transactions_structured = structured_dfs(
+        df_file_metadata=df_file_metadata,
+        df_groups=df_groups,
+        df_accounts=df_accounts,
+        df_transactions=df_transactions,
+    )
 
     return {
         "file_name": file_name,
@@ -346,7 +409,9 @@ def process_nai_file(input_folder_path: str, file_name: str, transaction_detail_
         "df_file_metadata": df_file_metadata,
         "df_groups": df_groups,
         "df_accounts": df_accounts,
-        "df_transactions": df_transactions
+        "df_transactions": df_transactions,
+        "df_accounts_structured": df_accounts_structured,
+        "df_transactions_structured": df_transactions_structured,
     }
 
 
@@ -371,5 +436,3 @@ def nai_parser(
         )
 
     return nai_dict
-
-

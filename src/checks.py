@@ -217,10 +217,10 @@ def nai_file_checks(
 
     return df_checks
 
-def nai_dict_checks(nai_dict):
+def nai_dict_checks(files_dict):
     df_nai_checks = None
     
-    for file_name, file_data in nai_dict.items():
+    for file_name, file_data in files_dict.items():
 
         nai_check_params = {key: file_data[key] for key in [
             "df_file_metadata",
@@ -229,8 +229,8 @@ def nai_dict_checks(nai_dict):
             "df_transactions"
             ]
         }
-        df_nai_checks_tmp = nai_file_checks(**nai_check_params)
-        
+        nai_check_params["file_name"] = file_name # ✅ Adding file_name separately is fin
+        df_nai_checks_tmp = nai_file_checks(**nai_check_params) # ✅ Call function with unpacked parameters
 
         # Combine dfs
         if df_nai_checks == None:
